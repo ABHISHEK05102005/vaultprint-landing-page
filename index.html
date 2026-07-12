@@ -572,13 +572,27 @@
   //
   // Example Apps Script doPost handler:
   // function doPost(e) {
-  //   const data = JSON.parse(e.postData.contents);
   //   const sheet = SpreadsheetApp.openById('YOUR_SHEET_ID').getSheetByName('Sheet1');
-  //   sheet.appendRow([new Date(), data.fullName, data.email, data.mobile, data.whatsapp, data.social, data.college, data.achievement, data.activity, data.roles, data.reach, data.promotion, data.hasPrintShop, data.collegeSize]);
+  //   sheet.appendRow([
+  //     new Date(),
+  //     e.parameter.fullName || '',
+  //     e.parameter.email || '',
+  //     e.parameter.mobile || '',
+  //     e.parameter.whatsapp || '',
+  //     e.parameter.social || '',
+  //     e.parameter.college || '',
+  //     e.parameter.achievement || '',
+  //     e.parameter.activity || '',
+  //     e.parameter.roles || '',
+  //     e.parameter.reach || '',
+  //     e.parameter.promotion || '',
+  //     e.parameter.hasPrintShop || '',
+  //     e.parameter.collegeSize || ''
+  //   ]);
   //   return ContentService.createTextOutput(JSON.stringify({ status: 'success' })).setMimeType(ContentService.MimeType.JSON);
   // }
   // ---------------------------------------------------------------
-  const FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbw_Wu-kBfoGEXvj5tK90tQLRXUVrhdur4cPc04M5IwUVAha3aq1jujqav4GfOYsQ6Hn/exec"; // <-- paste your Google Apps Script web app URL here
+  const FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbzD_JMEb4GT3IdIWcDn7J9HkTN2pNoU8Pu1GFn4nkOUZ8v6KX-2RMYyvmGe2RDXiTtq/exec"; // <-- paste your Google Apps Script web app URL here
 
   const form = document.getElementById('ambassador-form');
   const successPanel = document.getElementById('success-panel');
@@ -611,14 +625,14 @@
       return;
     }
 
+    const formData = new FormData(form);
     const payload = collectFormValues(form);
 
     if (FORM_ENDPOINT) {
       try {
         const res = await fetch(FORM_ENDPOINT, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
+          body: formData,
         });
         const text = await res.text();
         if (!res.ok) {
