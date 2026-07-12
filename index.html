@@ -33,6 +33,7 @@
     color:var(--graphite);
     font-family:'Inter',sans-serif;
     -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
   }
   h1,h2,h3{
     font-family:'Space Grotesk',sans-serif;
@@ -287,7 +288,7 @@
 </header>
 
 <section class="hero">
-  <div class="wrap" style="display:contents;">
+  <div class="wrap">
     <div>
       <span class="eyebrow">Self-service printing, on campus</span>
       <h1>Print instantly.<br>No shop. No queue.<br><span>No excuses.</span></h1>
@@ -619,9 +620,14 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
-        if (!res.ok) throw new Error('Submission failed');
+        const text = await res.text();
+        if (!res.ok) {
+          console.error('Form submission failed:', res.status, text);
+          throw new Error(`Status ${res.status}`);
+        }
       } catch (err) {
-        alert('Something went wrong sending your application. Please try again in a moment.');
+        console.error('Form submission error:', err);
+        alert('Something went wrong sending your application. Please check the console for details.');
         return;
       }
     } else {
